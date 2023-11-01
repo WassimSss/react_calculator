@@ -344,7 +344,7 @@ class App extends React.Component {
 		// Affichage de la calculatrice
 		return (
 			<div className="calculator">
-				<div className="resume">{this.state.allDisplay}</div>
+				<div className="resume">{parseFloat(this.state.allDisplay)}</div>
 				<div id="display" className="display">
 					{this.state.display ? isNaN(this.state.display) ? (
 						this.state.display
