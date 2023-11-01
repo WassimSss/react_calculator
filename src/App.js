@@ -113,7 +113,7 @@ class App extends React.Component {
 					className: 'decimal'
 				}
 			],
-			allDisplay: 0, // Historique de l'entrée
+			allDisplay: "0", // Historique de l'entrée
 			display: 0 // Affichage actuel
 		};
 
@@ -174,11 +174,20 @@ class App extends React.Component {
 		if (!isNaN(event.target.value)) {
 			// Ajouter la valeur au champ de saisie actuel et à l'historique complet si la valeur de l'événement est un nombre.
 
-			this.setState({
-				...this.state,
-				allDisplay: this.state.allDisplay + event.target.value,
-				display: this.state.display + event.target.value
-			});
+			// Si allDisplay vaut 0 et qu'on veut entrer un chiffre, on enleve le 0 de base
+			if(this.state.allDisplay === "0"){
+				this.setState({
+					...this.state,
+					allDisplay: event.target.value,
+					display: this.state.display + event.target.value
+				});
+			} else {
+				this.setState({
+					...this.state,
+					allDisplay: this.state.allDisplay + event.target.value,
+					display: this.state.display + event.target.value
+				});
+			}
 
 			if (/[-+*/]/.test(this.state.display)) {
 				// Créer un nouvel affichage avec la valeur si un opérateur est déjà présent.
@@ -210,6 +219,11 @@ class App extends React.Component {
 
 		// Obtenir les deux derniers caractères de l'affichage actuel
 		let twoLastArgument = this.state.allDisplay.slice(-2);
+		console.log(twoLastArgument)
+		// Si la premiere entrée est un opérateur, on ajoute un 0 fictif derrière pour continuer d'utiliser la logique des 2 arguments
+		if(twoLastArgument.length === 1){
+			twoLastArgument = "0" + twoLastArgument 
+		}
 
 		// Cas 1: Si le dernier caractère n'est pas un nombre
 		if (isNaN(twoLastArgument[1]) === false) {
@@ -250,7 +264,7 @@ class App extends React.Component {
 		clearButton.blur();
 
 		// Réinitialiser l'état de l'affichage
-		this.setState({ ...this.state, display: 0, allDisplay: 0 });
+		this.setState({ ...this.state, display: 0, allDisplay: "0" });
 	}
 
 	result() {
@@ -344,7 +358,7 @@ class App extends React.Component {
 		// Affichage de la calculatrice
 		return (
 			<div className="calculator">
-				<div className="resume">{parseFloat(this.state.allDisplay)}</div>
+				<div className="resume">{this.state.allDisplay}</div>
 				<div id="display" className="display">
 					{this.state.display ? isNaN(this.state.display) ? (
 						this.state.display
